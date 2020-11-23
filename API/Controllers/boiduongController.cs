@@ -43,7 +43,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_boiduong")]
+        [Route("edit_boiduong/{id}")]
         [HttpPut]
         public bool edit_boiduong(int id, [FromBody] Tblboiduong bd)
         {
@@ -67,7 +67,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_boiduong")]
+        [Route("delete_boiduong/{id}")]
         [HttpDelete]
         public bool delete_boiduong(int id)
         {

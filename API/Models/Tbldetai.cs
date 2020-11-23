@@ -38,7 +38,7 @@ namespace API.Models
         public DateTime? Thoigiannt { get; set; }
         public DateTime? Thoigiangiahan { get; set; }
         public int? Kqbv { get; set; } // 1 - Xuất sắc, 2 - Giỏi, 3 - Khá, 4 - Trung bình, 5 - Kém
-        public int? Capbv { get; set; } // 1 - Đề tài cấp bộ 2- Đề tài KHCNcấp trường
+        public int? Capbv { get; set; } // 1 - Đề tài cấp bộ 2- Đề tài KHCN cấp trường 3 - Đề tài cấp nhà nước
         public string Noidang { get; set; }
         public int? Namdang { get; set; }
         [Newtonsoft.Json.JsonIgnore]

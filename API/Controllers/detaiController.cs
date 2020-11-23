@@ -14,25 +14,98 @@ namespace API.Controllers
     {
         [Route("get_detai_pagesize")]
         [HttpGet]
-        public datatable<Tbldetai> get_detai_pagesize(int pagesize, int pageindex, string search)
+        public datatable<detai> get_detai_pagesize(int pagesize, int pageindex, string search)
         {
-            datatable<Tbldetai> dv = new datatable<Tbldetai>();
-            List<Tbldetai> ds = new List<Tbldetai>();
+            datatable<detai> dv = new datatable<detai>();
+            List<detai> ds = new List<detai>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
 
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
-                    dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0).Count();
+                    ds = (from dt in db.Tbldetais
+                          join hd in db.Tblhoatdongnckhs on dt.Idhdnckh equals hd.Id
+                          join lv in db.Tbllinhvucs on dt.Idlinhvuc equals lv.Id
+                          join lnv in db.Tblloainhiemvus on dt.Idloainv equals lnv.Id
+                          join nv in db.Tblloaihoatdongs on hd.Idloaihd equals nv.Id
+                          select new detai
+                          {
+                              Id = dt.Id,
+                              Tendetai = dt.Tendetai,
+                              Idnv = dt.Idnv,
+                              Idlsp = dt.Idlsp,
+                              Tentc = dt.Tentc,
+                              Sohieu = dt.Sohieu,
+                              Namsx = dt.Namsx,
+                              Tap = dt.Tap,
+                              So = dt.So,
+                              Trang = dt.Trang,
+                              Soif = dt.Soif,
+                              Minhchung = dt.Minhchung,
+                              Tinhtrang = dt.Tinhtrang,
+                              Ghichu = dt.Ghichu,
+                              Idlinhvuc = dt.Idlinhvuc,
+                              Idloainv = dt.Idloainv,
+                              Idhdnckh = dt.Idhdnckh,
+                              Uytin = dt.Uytin,
+                              Thoigianbd = dt.Thoigianbd,
+                              Thoigiankt = dt.Thoigiankt,
+                              Thoigiannt = dt.Thoigiannt,
+                              Thoigiangiahan = dt.Thoigiangiahan,
+                              Kqbv = dt.Kqbv,
+                              Capbv = dt.Capbv,
+                              Noidang = dt.Noidang,
+                              Namdang = dt.Namdang,
+                              Tenhdnckh = nv.Tenloaihd,
+                              Tenlinhvuc = lv.Tenlinhvuc,
+                              Tenloainv = lnv.Tenloainv
+                          }).Where(x => x.Tendetai.IndexOf(search) >= 0||x.Tinhtrang!=5).Skip(pageindex).Take(pagesize).ToList();
+                    //ds = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 || x.Tinhtrang != 5).Count();
                 }
                 else
                 {
-                    ds = db.Tbldetais.Skip(pageindex).Take(pagesize).ToList();
-                    dv.total = db.Tbldetais.Count();
+                    ds = (from dt in db.Tbldetais
+                          join hd in db.Tblhoatdongnckhs on dt.Idhdnckh equals hd.Id
+                          join lv in db.Tbllinhvucs on dt.Idlinhvuc equals lv.Id
+                          join lnv in db.Tblloainhiemvus on dt.Idloainv equals lnv.Id
+                          join nv in db.Tblloaihoatdongs on hd.Idloaihd equals nv.Id
+                          select new detai
+                          {
+                              Id = dt.Id,
+                              Tendetai = dt.Tendetai,
+                              Idnv = dt.Idnv,
+                              Idlsp = dt.Idlsp,
+                              Tentc = dt.Tentc,
+                              Sohieu = dt.Sohieu,
+                              Namsx = dt.Namsx,
+                              Tap = dt.Tap,
+                              So = dt.So,
+                              Trang = dt.Trang,
+                              Soif = dt.Soif,
+                              Minhchung = dt.Minhchung,
+                              Tinhtrang = dt.Tinhtrang,
+                              Ghichu = dt.Ghichu,
+                              Idlinhvuc = dt.Idlinhvuc,
+                              Idloainv = dt.Idloainv,
+                              Idhdnckh = dt.Idhdnckh,
+                              Uytin = dt.Uytin,
+                              Thoigianbd = dt.Thoigianbd,
+                              Thoigiankt = dt.Thoigiankt,
+                              Thoigiannt = dt.Thoigiannt,
+                              Thoigiangiahan = dt.Thoigiangiahan,
+                              Kqbv = dt.Kqbv,
+                              Capbv = dt.Capbv,
+                              Noidang = dt.Noidang,
+                              Namdang = dt.Namdang,
+                              Tenhdnckh = nv.Tenloaihd,
+                              Tenlinhvuc = lv.Tenlinhvuc,
+                              Tenloainv = lnv.Tenloainv
+                          }).Where(x => x.Tinhtrang != 5).Skip(pageindex).Take(pagesize).ToList();
+                    dv.total = db.Tbldetais.Where(x => x.Tinhtrang != 5).Count();
+                    
                 }
                 dv.result = ds;
-
             }
             return dv;
         }
@@ -43,7 +116,7 @@ namespace API.Controllers
             double? s = 1;
             double? d = 0;
             DateTime a = new DateTime();
-            using(sql_NCKHContext db = new sql_NCKHContext())
+            using (sql_NCKHContext db = new sql_NCKHContext())
             {
                 if (!string.IsNullOrEmpty(dt.Thoigiankt.ToString()))
                 {
@@ -75,7 +148,7 @@ namespace API.Controllers
         }
         [Route("chuyen_trang_thai")]
         [HttpGet]
-        public bool chuyen_trang_thai(int id, int trangthai,string time)
+        public bool chuyen_trang_thai(int id, int trangthai, string time)
         {
             try
             {
@@ -122,6 +195,17 @@ namespace API.Controllers
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
                 dv = db.Tbldetais.SingleOrDefault(x => x.Id == id);
+            }
+            return dv;
+        }
+        [Route("get_detai_idnv")]
+        [HttpGet]
+        public Tbldetai get_detai_idnv(int id)
+        {
+            Tbldetai dv = new Tbldetai();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tbldetais.SingleOrDefault(x => x.Idnv == id);
             }
             return dv;
         }

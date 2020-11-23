@@ -13,6 +13,7 @@ namespace API.Models
         public int? Idloai { get; set; }
         public string Noidung { get; set; }
         public int? Luotem { get; set; }
+        public DateTime? Ngaydang { get; set; }
         //[Newtonsoft.Json.JsonIgnore]
         //[System.Xml.Serialization.XmlIgnore]
         public Tblloaitt IdloaiNavigation { get; set; }

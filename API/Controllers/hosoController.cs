@@ -10,30 +10,40 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class congtacController : ControllerBase
+    public class hosoController : ControllerBase
     {
-        [Route("get_congtac_idnv/{idnv}")]
+        [Route("get_hoso_pagesize")]
         [HttpGet]
-        public List<Tblcongtac> get_congtac_idnv(int idnv)
+        public List<Tblhoso> get_hoso_pagesize(int iddetai)
         {
-            List<Tblcongtac> ds = new List<Tblcongtac>();
+            datatable<Tblhoso> dv = new datatable<Tblhoso>();
+            List<Tblhoso> ds = new List<Tblhoso>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
 
-                ds = db.Tblcongtacs.Where(x => x.Idnv == idnv).ToList();
-
+                return db.Tblhosos.Where(x => x.Iddetai == iddetai).ToList();
             }
-            return ds;
         }
-        [Route("create_congtac")]
+        [Route("get_hoso_id")]
+        [HttpGet]
+        public Tblhoso get_hoso_id(int id)
+        {
+            Tblhoso dv = new Tblhoso();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tblhosos.SingleOrDefault(x => x.Id == id);
+            }
+            return dv;
+        }
+        [Route("create_hoso")]
         [HttpPost]
-        public bool create_congtac([FromBody] Tblcongtac ct)
+        public bool create_hoso([FromBody] Tblhoso dv)
         {
             try
             {
                 using (sql_NCKHContext db = new sql_NCKHContext())
                 {
-                    db.Tblcongtacs.Add(ct);
+                    db.Tblhosos.Add(dv);
                     db.SaveChanges();
                     return true;
                 }
@@ -43,22 +53,20 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_congtac")]
+        [Route("edit_hoso")]
         [HttpPut]
-        public bool edit_congtac(int id, [FromBody] Tblcongtac dv)
+        public bool edit_hoso(int id, [FromBody] Tblhoso hs)
         {
             try
             {
                 using (sql_NCKHContext db = new sql_NCKHContext())
                 {
-                    Tblcongtac d = db.Tblcongtacs.SingleOrDefault(x => x.Id == id);
+                    Tblhoso d = db.Tblhosos.SingleOrDefault(x => x.Id == id);
                     if (string.IsNullOrEmpty(d.ToString()))
                         return false;
-                    d.Noict = dv.Noict;
-                    d.Ngaybad = dv.Ngaybad;
-                    d.Ngaykt = dv.Ngaykt;
-                    d.Chucvu = dv.Chucvu;
-                    d.Chucdanh = dv.Chucdanh;
+                    d.Ten = hs.Ten;
+                    d.Ngay = hs.Ngay;
+                    d.Minhchung = hs.Minhchung;
                     db.SaveChanges();
                     return true;
                 }
@@ -68,18 +76,18 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_congtac")]
+        [Route("delete_hoso/{id}")]
         [HttpDelete]
-        public bool delete_congtac(int id)
+        public bool delete_hoso(int id)
         {
             try
             {
                 using (sql_NCKHContext db = new sql_NCKHContext())
                 {
-                    Tblcongtac d = db.Tblcongtacs.SingleOrDefault(x => x.Id == id);
+                    Tblhoso d = db.Tblhosos.SingleOrDefault(x => x.Id == id);
                     if (string.IsNullOrEmpty(d.ToString()))
                         return true;
-                    db.Tblcongtacs.Remove(d);
+                    db.Tblhosos.Remove(d);
                     db.SaveChanges();
                     return true;
                 }
