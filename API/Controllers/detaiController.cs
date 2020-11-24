@@ -187,7 +187,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("get_detai_id")]
+        [Route("get_detai_id/{id}")]
         [HttpGet]
         public Tbldetai get_detai_id(int id)
         {
@@ -198,7 +198,7 @@ namespace API.Controllers
             }
             return dv;
         }
-        [Route("get_detai_idnv")]
+        [Route("get_detai_idnv/{id}")]
         [HttpGet]
         public Tbldetai get_detai_idnv(int id)
         {
@@ -227,7 +227,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_detai")]
+        [Route("edit_detai/{id}")]
         [HttpPut]
         public bool edit_detai(int id, [FromBody] Tbldetai dv)
         {
@@ -248,7 +248,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_detai")]
+        [Route("delete_detai/{id}")]
         [HttpDelete]
         public bool delete_detai(int id)
         {
