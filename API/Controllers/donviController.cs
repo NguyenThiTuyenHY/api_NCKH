@@ -20,15 +20,15 @@ namespace API.Controllers
             List<Tbldonvi> ds = new List<Tbldonvi>();
             using (sql_NCKHContext db  =new sql_NCKHContext())
             {
-                
+                int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Tbldonvis.Where(x => x.Tendv.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tbldonvis.Where(x => x.Tendv.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tbldonvis.Where(x => x.Tendv.IndexOf(search) >= 0).Count();
                 }
                 else
                 {
-                    ds = db.Tbldonvis.Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tbldonvis.Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tbldonvis.Count();
                 }
                 dv.result = ds;
@@ -36,7 +36,7 @@ namespace API.Controllers
             }
             return dv;
         }
-        [Route("get_donvi_id")]
+        [Route("get_donvi_id/{id}")]
         [HttpGet]
         public Tbldonvi get_donvi_id(int id)
         {
@@ -64,7 +64,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_donvi")]
+        [Route("edit_donvi/{id}")]
         [HttpPut]
         public bool edit_donvi(int id,[FromBody] Tbldonvi dv)
         {
@@ -87,7 +87,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_donvi")]
+        [Route("delete_donvi/{id}")]
         [HttpDelete]
         public bool delete_donvi(int id)
         {

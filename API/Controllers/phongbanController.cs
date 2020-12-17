@@ -12,6 +12,19 @@ namespace API.Controllers
     [ApiController]
     public class phongbanController : ControllerBase
     {
+        [Route("get_phongban_all")]
+        [HttpGet]
+        public List<Tblphongban> get_phongban_all()
+        {
+            List<Tblphongban> ds = new List<Tblphongban>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                ds = db.Tblphongbans.ToList();
+                if (ds == null)
+                    return null;
+            }
+            return ds;
+        }
         [Route("get_phongban_pagesize")]
         [HttpGet]
         public datatable<Tblphongban> get_phongban_pagesize(int pagesize, int pageindex, string search)
@@ -20,15 +33,15 @@ namespace API.Controllers
             List<Tblphongban> ds = new List<Tblphongban>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
+                int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Tblphongbans.Where(x => x.Tenphongban.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tblphongbans.Where(x => x.Tenphongban.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tblphongbans.Where(x => x.Tenphongban.IndexOf(search) >= 0).Count();
                 }
                 else
                 {
-                    ds = db.Tblphongbans.Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tblphongbans.Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tblphongbans.Count();
                 }
                 dv.result = ds;

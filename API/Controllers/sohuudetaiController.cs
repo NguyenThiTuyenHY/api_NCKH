@@ -14,17 +14,37 @@ namespace API.Controllers
     {
         [Route("get_sohuudetai_pagesize")]
         [HttpGet]
-        public datatable<Tblsohuudetai> get_donvi_pagesize(int pagesize, int pageindex, string search)
+        public datatable<Tblsohuudetai> get_sohuudetai_pagesize(int pagesize, int pageindex, string search)
         {
             datatable<Tblsohuudetai> dv = new datatable<Tblsohuudetai>();
             List<Tblsohuudetai> ds = new List<Tblsohuudetai>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
+                int index = (pageindex - 1) * pagesize;
                 ds = db.Tblsohuudetais.Skip(pageindex).Take(pagesize).ToList();
-                dv.total = db.Tbldonvis.Count();
+                dv.total = db.Tblsohuudetais.Count();
                 dv.result = ds;
             }
             return dv;
+        }
+        [Route("get_sohuudetai_iddetai/{iddetai}")]
+        [HttpGet]
+        public List<sohuu> get_sohuudetai_iddetai(int iddetai)
+        {
+            datatable<sohuu> dv = new datatable<sohuu>();
+            List<sohuu> ds = new List<sohuu>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+
+                return db.Tblsohuudetais.Join(db.Tblsohuus, dt => dt.Idsohuu, sh => sh.Id, (dt, sh) => new sohuu
+                {
+                    Id = dt.Id,
+                    Iddetai = dt.Iddetai,
+                    Idsohuu = dt.Idsohuu,
+                    Ghichu = dt.Ghichu,
+                    Tensohuu = sh.Tensohuu
+                }).Where(x => x.Id == iddetai).ToList();
+            }
         }
         [Route("get_sohuudetai_id")]
         [HttpGet]

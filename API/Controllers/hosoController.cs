@@ -12,9 +12,9 @@ namespace API.Controllers
     [ApiController]
     public class hosoController : ControllerBase
     {
-        [Route("get_hoso_pagesize")]
+        [Route("get_hoso_iddetai/{iddetai}")]
         [HttpGet]
-        public List<Tblhoso> get_hoso_pagesize(int iddetai)
+        public List<Tblhoso> get_hoso_iddetai(int iddetai)
         {
             datatable<Tblhoso> dv = new datatable<Tblhoso>();
             List<Tblhoso> ds = new List<Tblhoso>();
@@ -24,7 +24,7 @@ namespace API.Controllers
                 return db.Tblhosos.Where(x => x.Iddetai == iddetai).ToList();
             }
         }
-        [Route("get_hoso_id")]
+        [Route("get_hoso_id/{id}")]
         [HttpGet]
         public Tblhoso get_hoso_id(int id)
         {
@@ -53,7 +53,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_hoso")]
+        [Route("edit_hoso/{id}")]
         [HttpPut]
         public bool edit_hoso(int id, [FromBody] Tblhoso hs)
         {

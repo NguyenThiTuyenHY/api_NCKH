@@ -12,40 +12,18 @@ namespace API.Controllers
     [ApiController]
     public class lylichController : ControllerBase
     {
-        [Route("get_lylich_id")]
+        [Route("get_lylich_id/{id}")]
         [HttpGet]
-        public lylich get_lylich_id(int id)
+        public Tbllylich get_lylich_id(int id)
         {
-            lylich ll = new lylich();
+            Tbllylich ll = new Tbllylich();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-                Tblnhanvien nv = db.Tblnhanviens.SingleOrDefault(x => x.Id == id);
-                //db.Tblboiduongs.ToList();
-                //ll.dsboiduong = db.Tblboiduongs.Where(x => x.Idnv == id).ToList();
-                //ll.dscongtac = db.Tblcongtacs.Where(x => x.Idnv == id).ToList();
-                //ll.dsdetai = db.Tbldetais.Where(x => x.Idnv == id).ToList();
-                if (!string.IsNullOrEmpty(nv.Hinhanh))
-                {
-                    ll.Hinhanh = nv.Hinhanh;
-                }               
-                ll.Gioitinh = nv.Gioitinh;
-                ll.Hoten = nv.Hoten;
-                ll.Ngaysinh = nv.Ngaysinh;
-                ll.Noisinh = nv.Noisinh;
-                ll.Quequan = nv.Quequan;
-                ll.Dantoc = nv.Dantoc;
-                ll.Noiohnay = nv.Noiohnay; //Dia chi lien lac
-                ll.Dienthoai = nv.Dienthoai;
-                ll.Trinhdonn = nv.Trinhdonn;
-                ll.Tinhoc = nv.Tinhoc;
-                ll.Idpban = nv.Idpban;
-                ll.Tenphongban = db.Tblphongbans.SingleOrDefault(x => x.Id == nv.Idpban).Tenphongban;
-                ll.Idchucvu = nv.Idchucvu;
-                ll.Tenchucvu = db.Tblchucvus.SingleOrDefault(x => x.Id == nv.Idchucvu).Tenchucvu;
+                ll = db.Tbllyliches.SingleOrDefault(x => x.Id == id);
             }
             return ll;
         }
-        [Route("edit_lylich")]
+        [Route("edit_lylich/{id}")]
         [HttpPut]
         public bool edit_lylich(int id, [FromBody] lylich ll)
         {

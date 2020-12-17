@@ -20,21 +20,30 @@ namespace API.Controllers
             List<Tbllinhvuc> ds = new List<Tbllinhvuc>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
+                int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Tbllinhvucs.Where(x => x.Tenlinhvuc.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tbllinhvucs.Where(x => x.Tenlinhvuc.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tbllinhvucs.Where(x => x.Tenlinhvuc.IndexOf(search) >= 0).Count();
                 }
                 else
                 {
-                    ds = db.Tbllinhvucs.Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tbllinhvucs.Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tbllinhvucs.Count();
                 }
                 dv.result = ds;
 
             }
             return dv;
+        }
+        [Route("get_linhvuc_all")]
+        [HttpGet]
+        public List<Tbllinhvuc> get_linhvuc_all()
+        {
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                return db.Tbllinhvucs.ToList();      
+            }
         }
         [Route("get_linhvuc_id/{id}")]
         [HttpGet]

@@ -23,7 +23,7 @@ namespace API.Models
         public string Bangthacsi { get; set; }
         public int? Namcapbang { get; set; }
         public string Noidaotaoa2 { get; set; }
-        public int? Bangtiensi { get; set; }
+        public string Bangtiensi { get; set; }
         public int? Namcapbang2 { get; set; }
         public string Noidaotao2 { get; set; }
         public string Tenchuyende { get; set; }

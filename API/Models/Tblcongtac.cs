@@ -11,8 +11,8 @@ namespace API.Models
         public int Id { get; set; }
         public int? Idnv { get; set; }
         public string Noict { get; set; }
-        public DateTime Ngaybad { get; set; }
-        public DateTime Ngaykt { get; set; }
+        public DateTime? Ngaybad { get; set; }
+        public DateTime? Ngaykt { get; set; }
         public string Chucvu { get; set; }
         public string Chucdanh { get; set; }
         [Newtonsoft.Json.JsonIgnore]

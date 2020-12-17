@@ -29,17 +29,18 @@ namespace API.Controllers
         {
             datatable<Tblloaitt> dv = new datatable<Tblloaitt>();
             List<Tblloaitt> ds = new List<Tblloaitt>();
+            int index = (pageindex - 1) * pagesize;
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
 
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Tblloaitts.OrderByDescending(x=>x.Id).Where(x => x.Tenloaitt.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tblloaitts.OrderByDescending(x=>x.Id).Where(x => x.Tenloaitt.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tblloaitts.Where(x => x.Tenloaitt.IndexOf(search) >= 0).Count();
                 }
                 else
                 {
-                    ds = db.Tblloaitts.OrderByDescending(x => x.Id).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tblloaitts.OrderByDescending(x => x.Id).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tblloaitts.Count();
                 }
                 dv.result = ds;

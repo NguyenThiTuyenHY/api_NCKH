@@ -12,7 +12,7 @@ namespace API.Controllers
     [ApiController]
     public class nhomtgController : ControllerBase
     {
-        [Route("get_nhomtg_pagesize")]
+        [Route("get_nhomtg_all/{id}")]
         [HttpGet]
         public List<nhomtg> get_nhomtg_all(int id)
         {
@@ -30,7 +30,7 @@ namespace API.Controllers
             }
             return ds;
         }
-        [Route("get_nhomtg_id")]
+        [Route("get_nhomtg_id/{id}")]
         [HttpGet]
         public Tblnhomtg get_nhomtg_id(int id)
         {
@@ -59,7 +59,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_nhomtg")]
+        [Route("edit_nhomtg/{id}")]
         [HttpPut]
         public bool edit_loainhiemvu(int id, [FromBody] Tblnhomtg ntg)
         {
@@ -80,7 +80,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_nhomtg")]
+        [Route("delete_nhomtg/{id}")]
         [HttpDelete]
         public bool delete_nhomtg(int id)
         {

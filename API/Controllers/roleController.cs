@@ -20,21 +20,37 @@ namespace API.Controllers
             List<Role> ds = new List<Role>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
+                int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Roles.Where(x => x.Ten.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Roles.Where(x => x.Ten.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Roles.Where(x => x.Ten.IndexOf(search) >= 0).Count();
                 }
                 else
                 {
-                    ds = db.Roles.Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Roles.Skip(index).Take(pagesize).ToList();
                     dv.total = db.Roles.Count();
                 }
                 dv.result = ds;
 
             }
             return dv;
+        }
+        [Route("get_role_all")]
+        [HttpGet]
+        public List<Role> get_role_all()
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Roles.ToList();   
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
         [Route("get_role_id/{id}")]
         [HttpGet]
@@ -49,7 +65,7 @@ namespace API.Controllers
         }
         [Route("create_role")]
         [HttpPost]
-        public bool create_donvi([FromBody] Tbldonvi dv)
+        public bool create_role([FromBody] Tbldonvi dv)
         {
             try
             {

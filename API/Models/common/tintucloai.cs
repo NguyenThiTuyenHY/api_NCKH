@@ -14,5 +14,6 @@ namespace API.Models
         public string Noidung { get; set; }
         public int? Luotem { get; set; }
         public string Tenloaitt { get; set; }
+        public DateTime? Ngaydang { get; set; }
     }
 }

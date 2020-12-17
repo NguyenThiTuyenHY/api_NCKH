@@ -20,7 +20,7 @@ namespace API.Controllers
             List<detai> ds = new List<detai>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
+                //int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
                     ds = (from dt in db.Tbldetais
@@ -59,7 +59,7 @@ namespace API.Controllers
                               Tenhdnckh = nv.Tenloaihd,
                               Tenlinhvuc = lv.Tenlinhvuc,
                               Tenloainv = lnv.Tenloainv
-                          }).Where(x => x.Tendetai.IndexOf(search) >= 0||x.Tinhtrang!=5).Skip(pageindex).Take(pagesize).ToList();
+                          }).Where(x => x.Tendetai.IndexOf(search) >= 0 || x.Tinhtrang != 5).Skip(pageindex).Take(pagesize).ToList();
                     //ds = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
                     dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 || x.Tinhtrang != 5).Count();
                 }
@@ -103,7 +103,7 @@ namespace API.Controllers
                               Tenloainv = lnv.Tenloainv
                           }).Where(x => x.Tinhtrang != 5).Skip(pageindex).Take(pagesize).ToList();
                     dv.total = db.Tbldetais.Where(x => x.Tinhtrang != 5).Count();
-                    
+
                 }
                 dv.result = ds;
             }
@@ -268,6 +268,101 @@ namespace API.Controllers
             {
                 return false;
             }
+        }
+        [Route("get_detai_nckh/{id}")]
+        [HttpGet]
+        public List<detainhom> get_detai_nckh(int id)
+        {
+            List<detainhom> dv = new List<detainhom>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tbldetais.Select(dt => new detainhom
+                {
+                    Id = dt.Id,
+                    Tendetai = dt.Tendetai,
+                    Idnv = dt.Idnv,
+                    Sohieu = dt.Sohieu,
+                    Kqbv = dt.Kqbv, // 1 - Xuất sắc, 2 - Giỏi, 3 - Khá, 4 - Trung bình, 5 - Kém
+                    Capbv = dt.Capbv, // 1 - Đề tài cấp bộ, 2 - Đề tài KHCNcấp trường, 3 - Đề tài cấp nhà nước
+                    Thoigianbd = dt.Thoigianbd,
+                    Thoigiankt = dt.Thoigiankt,
+                    Thoigiannt = dt.Thoigiannt,
+                    Thoigiangiahan = dt.Thoigiangiahan, // Thời gian gia hạn
+                    Tinhtrang = dt.Tinhtrang // 1 - chua duyet, 2 - duyet, 3 - hoan thanh, 4 - xin thoi gian, 5 - ap dung thuc tien, 6 - báo cáo
+                }).Where(x => x.Idnv == id && x.Tinhtrang == 3).ToList();
+            }
+            return dv;
+        }
+        [Route("get_detai_nckh2/{id}")]
+        [HttpGet]
+        public List<detainoidang> get_detai_nckh2(int id)
+        {
+            List<detainoidang> dv = new List<detainoidang>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tbldetais.Where(x => x.Idnv == id && x.Noidang != null).Select(dt => new detainoidang
+                {
+                    Id = dt.Id,
+                    Tendetai = dt.Tendetai,
+                    Idnv = dt.Idnv,
+                    Noidang = dt.Noidang,
+                    Namdang = dt.Namdang
+                }).ToList();
+            }
+            return dv;
+        }
+        [Route("get_detai_nckh3/{id}")]
+        [HttpGet]
+        public List<detainoidang> get_detai_nckh3(int id)
+        {
+            List<detainoidang> dv = new List<detainoidang>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tbldetais.Where(x => x.Idnv == id && x.Noidang != null && x.Tinhtrang != 6).Select(dt => new detainoidang
+                {
+                    Id = dt.Id,
+                    Tendetai = dt.Tendetai,
+                    Idnv = dt.Idnv,
+                    Noidang = dt.Noidang,
+                    Namdang = dt.Namdang
+                }).ToList();
+            }
+            return dv;
+        }
+        [Route("get_detai_nckh6/{id}")]
+        [HttpGet]
+        public List<detainoidang> get_detai_nckh6(int id)
+        {
+            List<detainoidang> dv = new List<detainoidang>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tbldetais.Where(x => x.Idnv == id && x.Tinhtrang == 6).Select(dt => new detainoidang
+                {
+                    Id = dt.Id,
+                    Tendetai = dt.Tendetai,
+                    Idnv = dt.Idnv,
+                    Noidang = dt.Noidang,
+                    Namdang = dt.Namdang
+                }).ToList();
+            }
+            return dv;
+        }
+        [Route("get_detai_nckh5/{id}")]
+        [HttpGet]
+        public List<detaithucte> get_detai_nckh5(int id)
+        {
+            List<detaithucte> dv = new List<detaithucte>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                dv = db.Tbldetais.Where(x => x.Idnv == id && x.Tinhtrang == 5).Select(dt => new detaithucte
+                {
+                    Id = dt.Id,
+                    Tendetai = dt.Tendetai,
+                    Idnv = dt.Idnv,
+                    Ghichu = dt.Ghichu
+                }).ToList();
+            }
+            return dv;
         }
     }
 }

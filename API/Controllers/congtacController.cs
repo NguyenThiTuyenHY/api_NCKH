@@ -16,14 +16,19 @@ namespace API.Controllers
         [HttpGet]
         public List<Tblcongtac> get_congtac_idnv(int idnv)
         {
-            List<Tblcongtac> ds = new List<Tblcongtac>();
-            using (sql_NCKHContext db = new sql_NCKHContext())
+            try
             {
-
-                ds = db.Tblcongtacs.Where(x => x.Idnv == idnv).ToList();
-
+                List<Tblcongtac> ds = new List<Tblcongtac>();
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    ds = db.Tblcongtacs.Where(x => x.Idnv == idnv).ToList();
+                }
+                return ds;
             }
-            return ds;
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
         [Route("create_congtac")]
         [HttpPost]

@@ -20,7 +20,7 @@ namespace API.Controllers
             List<Tblloainhiemvu> ds = new List<Tblloainhiemvu>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
+                int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
                     ds = db.Tblloainhiemvus.Where(x => x.Tenloainv.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
@@ -35,6 +35,15 @@ namespace API.Controllers
 
             }
             return dv;
+        }
+        [Route("get_loainhiemvu_all")]
+        [HttpGet]
+        public List<Tblloainhiemvu> get_loainhiemvu_all()
+        {
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                return db.Tblloainhiemvus.ToList();
+            }
         }
         [Route("get_loainhiemvu_id/{id}")]
         [HttpGet]

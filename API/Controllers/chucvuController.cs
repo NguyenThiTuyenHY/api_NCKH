@@ -12,6 +12,19 @@ namespace API.Controllers
     [ApiController]
     public class chucvuController : ControllerBase
     {
+        [Route("get_chucvu_all")]
+        [HttpGet]
+        public List<Tblchucvu> get_chucvu_all()
+        {
+            List<Tblchucvu> ds = new List<Tblchucvu>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                ds = db.Tblchucvus.ToList();
+                if (ds == null)
+                    return null;
+            }
+            return ds;
+        }
         [Route("get_chucvu_pagesize")]
         [HttpGet]
         public datatable<Tblchucvu> get_chucvu_pagesize(int pagesize, int pageindex, string search)
@@ -20,15 +33,15 @@ namespace API.Controllers
             List<Tblchucvu> ds = new List<Tblchucvu>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
+                int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Tblchucvus.Where(x => x.Tenchucvu.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tblchucvus.Where(x => x.Tenchucvu.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tblchucvus.Where(x => x.Tenchucvu.IndexOf(search) >= 0).Count();
                 }
                 else
                 {
-                    ds = db.Tblchucvus.Skip(pageindex).Take(pagesize).ToList();
+                    ds = db.Tblchucvus.Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tblchucvus.Count();
                 }
                 dv.result = ds;
@@ -36,7 +49,7 @@ namespace API.Controllers
             }
             return dv;
         }
-        [Route("get_chucvu_id")]
+        [Route("get_chucvu_id/{id}")]
         [HttpGet]
         public Tblchucvu get_chucvu_id(int id)
         {
@@ -65,7 +78,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("edit_chucvu")]
+        [Route("edit_chucvu/{id}")]
         [HttpPut]
         public bool edit_chucvu(int id, [FromBody] Tblchucvu cv)
         {
@@ -89,7 +102,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_chucvu")]
+        [Route("delete_chucvu/{id}")]
         [HttpDelete]
         public bool delete_chucvu(int id)
         {

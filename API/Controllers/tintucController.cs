@@ -50,6 +50,7 @@ namespace API.Controllers
         public datatable<tintucloai> get_tintuc_pagesize(int pagesize, int pageindex, string search)
         {
             datatable<tintucloai> dv = new datatable<tintucloai>();
+            int index = (pageindex - 1) * pagesize;
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
 
@@ -63,8 +64,9 @@ namespace API.Controllers
                         Idloai = tt.Idloai,
                         Noidung = tt.Noidung,
                         Luotem = tt.Luotem,
+                        Ngaydang = tt.Ngaydang,
                         Tenloaitt = ltt.Tenloaitt
-                    }).Where(x => x.Tieude.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    }).Where(x => x.Tieude.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tbltintucs.Where(x => x.Tieude.IndexOf(search) >= 0).Count();
                 }
                 else
@@ -77,8 +79,9 @@ namespace API.Controllers
                         Idloai = tt.Idloai,
                         Noidung = tt.Noidung,
                         Luotem = tt.Luotem,
+                        Ngaydang = tt.Ngaydang,
                         Tenloaitt = ltt.Tenloaitt
-                    }).Skip(pageindex).Take(pagesize).ToList();
+                    }).Skip(index).Take(pagesize).ToList();
                     dv.total = db.Tbltintucs.Count();
                 }
             }
@@ -179,9 +182,9 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_loaitintuc/{id}")]
+        [Route("delete_tintuc/{id}")]
         [HttpDelete]
-        public bool delete_loaitintuc(int id)
+        public bool delete_tintuc(int id)
         {
             try
             {
@@ -198,6 +201,118 @@ namespace API.Controllers
             catch (Exception)
             {
                 return false;
+            }
+        }
+        [Route("get_tintuc_idloai/{id}")]
+        [HttpGet]
+        public List<Tbltintuc> get_tintuc_idloai(int id)
+        {
+            try
+            {
+                using(sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.Where(x => x.Idloai == id).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        [Route("get_tintuc_slider")]
+        [HttpGet]
+        public List<Tbltintuc> get_tintuc_slider()
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.OrderByDescending(x=>x.Id).Skip(0).Take(3).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        [Route("get_tintuc_idloai_pagesize")]
+        [HttpGet]
+        public List<Tbltintuc> get_tintuc_idloai_pagesize(int id, int pagesize)
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.OrderByDescending(x => x.Id).Where(x=>x.Idloai == id).Skip(1).Take(pagesize).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        [Route("get_tintuc_idloai_singer")]
+        [HttpGet]
+        public Tbltintuc get_tintuc_idloai_singer(int id)
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.OrderByDescending(x => x.Id).FirstOrDefault(x => x.Idloai == id);
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        [Route("get_tintuc_idloai_singer_new")]
+        [HttpGet]
+        public Tbltintuc get_tintuc_idloai_singer_new()
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.OrderByDescending(x => x.Id).First();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        [Route("get_tintuc_idloai_new")]
+        [HttpGet]
+        public List<Tbltintuc> get_tintuc_idloai_new()
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.OrderByDescending(x => x.Id).Skip(1).Take(3).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        [Route("get_tintuc_popular")]
+        [HttpGet]
+        public List<Tbltintuc> get_tintuc_popular()
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    return db.Tbltintucs.OrderByDescending(x => x.Luotem).Skip(0).Take(3).ToList();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }
