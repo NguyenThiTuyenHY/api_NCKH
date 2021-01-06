@@ -45,6 +45,24 @@ namespace API.Controllers
                 return ex.Message;
             }
         }
+        [Route("get_nhanvien_all")]
+        [HttpGet]
+        public List<Tblnhanvien> get_nhanvien_all()
+        {
+            using(sql_NCKHContext db = new sql_NCKHContext())
+            {
+                return db.Tblnhanviens.ToList();
+            }
+        }
+        [Route("get_nhanvien_all_idnv/{id}")]
+        [HttpGet]
+        public List<Tblnhanvien> get_nhanvien_all_idnv(int id)
+        {
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                return db.Tblnhanviens.Where(x=>x.Id!=id).ToList();
+            }
+        }
         [Route("get_nhanvien_pagesize")]
         [HttpGet]
         public datatable<nhanvien> get_nhanvien_pagesize(int pagesize, int pageindex, string search)

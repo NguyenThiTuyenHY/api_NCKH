@@ -315,5 +315,24 @@ namespace API.Controllers
                 return null;
             }
         }
+        [Route("set_tintuc_luotxem/{id}")]
+        [HttpGet]
+        public bool set_tintuc_luotxem(int id)
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    Tbltintuc tt = db.Tbltintucs.SingleOrDefault(x => x.Id == id);
+                    tt.Luotem = tt.Luotem + 1;
+                    db.SaveChanges();
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

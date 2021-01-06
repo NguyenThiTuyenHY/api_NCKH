@@ -31,11 +31,8 @@ namespace API.Controllers
         [HttpGet]
         public List<sohuu> get_sohuudetai_iddetai(int iddetai)
         {
-            datatable<sohuu> dv = new datatable<sohuu>();
-            List<sohuu> ds = new List<sohuu>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-
                 return db.Tblsohuudetais.Join(db.Tblsohuus, dt => dt.Idsohuu, sh => sh.Id, (dt, sh) => new sohuu
                 {
                     Id = dt.Id,
@@ -43,10 +40,10 @@ namespace API.Controllers
                     Idsohuu = dt.Idsohuu,
                     Ghichu = dt.Ghichu,
                     Tensohuu = sh.Tensohuu
-                }).Where(x => x.Id == iddetai).ToList();
+                }).Where(x => x.Iddetai == iddetai).ToList();
             }
         }
-        [Route("get_sohuudetai_id")]
+        [Route("get_sohuudetai_id/{id}")]
         [HttpGet]
         public Tblsohuudetai get_sohuudetai_id(int id)
         {
@@ -59,23 +56,49 @@ namespace API.Controllers
         }
         [Route("create_sohuudetai")]
         [HttpPost]
-        public bool create_sohuudetai([FromBody] Tblsohuudetai sh)
+        public alter create_sohuudetai([FromBody] List<Tblsohuudetai> sh)
         {
+            alter al = new alter();
             try
             {
+                if(sh.Count() == 0)
+                {
+                    al.ketqua = false;
+                    al.thongbao = "Không để rỗng";
+                    return al;
+                }
                 using (sql_NCKHContext db = new sql_NCKHContext())
                 {
-                    db.Tblsohuudetais.Add(sh);
-                    db.SaveChanges();
-                    return true;
+                    int dem = 0;
+                    foreach(var item in sh)
+                    {
+                        Tblsohuudetai result = db.Tblsohuudetais.SingleOrDefault(x => x.Iddetai == item.Iddetai && x.Idsohuu == item.Idsohuu);
+                        if (result ==null)
+                        {
+                            Tblsohuudetai a = new Tblsohuudetai();
+                            a.Iddetai = item.Iddetai;
+                            a.Idsohuu = item.Idsohuu;
+                            db.Tblsohuudetais.Add(a);
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            dem++;
+                        }
+                    }
+                    al.ketqua = true;
+                    al.thongbao = string.Format("Thêm thành công {0}, lỗi {1} ", sh.Count() - dem, dem);
+                     return al;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                al.ketqua = false;
+                al.thongbao = ex.Message;
+                return al;
             }
         }
-        [Route("edit_sohuudetai")]
+        [Route("edit_sohuudetai/{id}")]
         [HttpPut]
         public bool edit_sohuudetai(int id, [FromBody] Tblsohuudetai sh)
         {
@@ -97,7 +120,7 @@ namespace API.Controllers
                 return false;
             }
         }
-        [Route("delete_sohuudetai")]
+        [Route("delete_sohuudetai/{id}")]
         [HttpDelete]
         public bool delete_sohuudetai(int id)
         {

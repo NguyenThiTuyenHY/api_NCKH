@@ -14,6 +14,7 @@ namespace API.Models
         public string Token { get; set; }
         public string Hinhanh { get; set; }
         public int? Idnhanvien { get; set; }
+        public int Trangthai { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         [System.Xml.Serialization.XmlIgnore]
         public virtual Tblnhanvien IdnhanvienNavigation { get; set; }

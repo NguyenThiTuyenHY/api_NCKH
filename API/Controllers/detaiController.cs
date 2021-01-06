@@ -59,9 +59,9 @@ namespace API.Controllers
                               Tenhdnckh = nv.Tenloaihd,
                               Tenlinhvuc = lv.Tenlinhvuc,
                               Tenloainv = lnv.Tenloainv
-                          }).Where(x => x.Tendetai.IndexOf(search) >= 0 || x.Tinhtrang != 5).Skip(pageindex).Take(pagesize).ToList();
+                          }).Where(x => x.Tendetai.IndexOf(search) >= 0 &&( x.Tinhtrang != -1 && x.Tinhtrang != 6)).Skip(pageindex).Take(pagesize).ToList();
                     //ds = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
-                    dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 || x.Tinhtrang != 5).Count();
+                    dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 &&( x.Tinhtrang != -1 && x.Tinhtrang != 6)).Count();
                 }
                 else
                 {
@@ -101,8 +101,8 @@ namespace API.Controllers
                               Tenhdnckh = nv.Tenloaihd,
                               Tenlinhvuc = lv.Tenlinhvuc,
                               Tenloainv = lnv.Tenloainv
-                          }).Where(x => x.Tinhtrang != 5).Skip(pageindex).Take(pagesize).ToList();
-                    dv.total = db.Tbldetais.Where(x => x.Tinhtrang != 5).Count();
+                          }).Where(x => x.Tinhtrang != -1 && x.Tinhtrang != 6).Skip(pageindex).Take(pagesize).ToList();
+                    dv.total = db.Tbldetais.Where(x => x.Tinhtrang != -1 && x.Tinhtrang != 6).Count();
 
                 }
                 dv.result = ds;
@@ -159,13 +159,10 @@ namespace API.Controllers
                         return false;
                     switch (trangthai)
                     {
-                        case 1:
-                            dt.Tinhtrang = 1; //Xac nhan
+                        case 2:
+                            dt.Tinhtrang = 2; //duyệt
                             dt.Thoigianbd = DateTime.Now;
                             dt.Thoigiannt = tinhthoigiannt(dt, Convert.ToDateTime(dt.Thoigianbd));
-                            break;
-                        case 2:
-                            dt.Tinhtrang = 2; //Dang hoan thanh
                             break;
                         case 3:
                             dt.Tinhtrang = 3; //Hoan thanh
@@ -175,7 +172,10 @@ namespace API.Controllers
                             dt.Tinhtrang = 4; //Xin them thoi gian
                             break;
                         case 5:
-                            dt.Tinhtrang = 5;
+                            dt.Tinhtrang = 5; //áp dụng thực tế
+                            break;
+                        case -1:
+                            dt.Tinhtrang = -1; //huỷ
                             break;
                     }
                     db.SaveChanges();
@@ -200,14 +200,50 @@ namespace API.Controllers
         }
         [Route("get_detai_idnv/{id}")]
         [HttpGet]
-        public Tbldetai get_detai_idnv(int id)
+        public List<detai> get_detai_idnv(int id)
         {
-            Tbldetai dv = new Tbldetai();
+            List<detai> ds = new List<detai>();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-                dv = db.Tbldetais.SingleOrDefault(x => x.Idnv == id);
+                ds = (from dt in db.Tbldetais
+                      join hd in db.Tblhoatdongnckhs on dt.Idhdnckh equals hd.Id
+                      join lv in db.Tbllinhvucs on dt.Idlinhvuc equals lv.Id
+                      join lnv in db.Tblloainhiemvus on dt.Idloainv equals lnv.Id
+                      join nv in db.Tblloaihoatdongs on hd.Idloaihd equals nv.Id
+                      select new detai
+                      {
+                          Id = dt.Id,
+                          Tendetai = dt.Tendetai,
+                          Idnv = dt.Idnv,
+                          Idlsp = dt.Idlsp,
+                          Tentc = dt.Tentc,
+                          Sohieu = dt.Sohieu,
+                          Namsx = dt.Namsx,
+                          Tap = dt.Tap,
+                          So = dt.So,
+                          Trang = dt.Trang,
+                          Soif = dt.Soif,
+                          Minhchung = dt.Minhchung,
+                          Tinhtrang = dt.Tinhtrang,
+                          Ghichu = dt.Ghichu,
+                          Idlinhvuc = dt.Idlinhvuc,
+                          Idloainv = dt.Idloainv,
+                          Idhdnckh = dt.Idhdnckh,
+                          Uytin = dt.Uytin,
+                          Thoigianbd = dt.Thoigianbd,
+                          Thoigiankt = dt.Thoigiankt,
+                          Thoigiannt = dt.Thoigiannt,
+                          Thoigiangiahan = dt.Thoigiangiahan,
+                          Kqbv = dt.Kqbv,
+                          Capbv = dt.Capbv,
+                          Noidang = dt.Noidang,
+                          Namdang = dt.Namdang,
+                          Tenhdnckh = nv.Tenloaihd,
+                          Tenlinhvuc = lv.Tenlinhvuc,
+                          Tenloainv = lnv.Tenloainv
+                      }).Where(x => x.Tinhtrang != -1 && x.Tinhtrang != 6 && x.Idnv == id).ToList();
             }
-            return dv;
+            return ds;
         }
         [Route("create_detai")]
         [HttpPost]

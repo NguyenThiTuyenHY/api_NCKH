@@ -27,7 +27,7 @@ namespace API.Models
         public int? Trang { get; set; }
         public string Soif { get; set; }
         public string Minhchung { get; set; } // lien ket
-        public int? Tinhtrang { get; set; } // 1 - chua duyet, 2 - duyet, 3 - hoan thanh, 4 - xin thoi gian, 5 - ap dung thuc tien   
+        public int? Tinhtrang { get; set; } // 1 - chua duyet, 2 - duyet, 3 - hoan thanh, 4 - xin thoi gian, 5 - ap dung thuc tien, 6- , -1 - huỷ   
         public string Ghichu { get; set; } // Hình thức, quy mô, địa chỉ áp dụng
         public int? Idlinhvuc { get; set; }
         public int? Idloainv { get; set; }

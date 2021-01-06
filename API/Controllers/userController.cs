@@ -51,13 +51,26 @@ namespace API.Controllers
         {
             datatable<User> dv = new datatable<User>();
             List<User> ds = new List<User>();
+            int role_ = 0;
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
                 int index = (pageindex - 1) * pagesize;
                 if (!string.IsNullOrEmpty(search))
                 {
-                    ds = db.Users.Where(x => x.Taikhoan.IndexOf(search) >= 0).Skip(index).Take(pagesize).ToList();
-                    dv.total = db.Users.Where(x => x.Taikhoan.IndexOf(search) >= 0).Count();
+                    if (search.ToUpper() == "CÁN BỘ")
+                    {
+                        role_ = 3;
+                    }
+                    if (search.ToUpper() == "ADMIN")
+                    {
+                        role_ = 1;
+                    }
+                    if (search.ToUpper() == "NHÂN VIÊN")
+                    {
+                        role_ = 2;
+                    }
+                    ds = db.Users.Where(x => x.Taikhoan.IndexOf(search) >= 0 || x.Idrole == role_).Skip(index).Take(pagesize).ToList();
+                    dv.total = db.Users.Where(x => x.Taikhoan.IndexOf(search) >= 0 || x.Idrole == role_).Count();
                 }
                 else
                 {
@@ -84,7 +97,8 @@ namespace API.Controllers
                         Matkhau = u.Matkhau,
                         Token = u.Token,
                         Role = r.Id,
-                        Hinhanh = u.Hinhanh
+                        Hinhanh = u.Hinhanh,
+                        Idnv = u.Idnhanvien
                     }).SingleOrDefault(x => x.Taikhoan.IndexOf(username) >= 0 && x.Matkhau.IndexOf(password) >= 0);
                     return user;
                 }
@@ -103,11 +117,17 @@ namespace API.Controllers
                 alter nd = new alter();
                 using (sql_NCKHContext db = new sql_NCKHContext())
                 {
-                    foreach (User u in db.Users.ToList())
+                    User u = db.Users.SingleOrDefault(x => x.Taikhoan == username);
+                    if (u == null)
                     {
-                        if (u.Taikhoan.IndexOf(username) >= 0)
+                        nd.ketqua = false;
+                        nd.thongbao = "Tài khoản không tồn tại";
+                    }
+                    else
+                    {
+                        if(u.Matkhau == password)
                         {
-                            if (u.Matkhau.IndexOf(password) >= 0)
+                            if(u.Trangthai == 1)
                             {
                                 nd.ketqua = true;
                                 nd.thongbao = "Đăng nhập thành công";
@@ -115,13 +135,13 @@ namespace API.Controllers
                             else
                             {
                                 nd.ketqua = false;
-                                nd.thongbao = "Mật khẩu không tồn tại";
+                                nd.thongbao = "Tài khoản của bạn đã bị xoá! Liên hệ với Admin để biết thêm chi tiết";
                             }
                         }
                         else
                         {
                             nd.ketqua = false;
-                            nd.thongbao = "Tài khoản không tồn tại";
+                            nd.thongbao = "Mật khẩu không tồn tại";
                         }
                     }
                     return nd;
@@ -161,6 +181,7 @@ namespace API.Controllers
                 }
                 using (sql_NCKHContext db = new sql_NCKHContext())
                 {
+                    us.Trangthai = 1;
                     db.Users.Add(us);
                     db.SaveChanges();
                     return true;
@@ -209,7 +230,7 @@ namespace API.Controllers
                 return al;
             }
         }
-        [Route("delete_user")]
+        [Route("delete_user/{id}")]
         [HttpDelete]
         public bool delete_user(int id)
         {
@@ -249,6 +270,71 @@ namespace API.Controllers
             catch (Exception)
             {
                 return false;
+            }
+        }
+        [Route("change_user/{id}/{idnv}")]
+        [HttpGet]
+        public bool change_user(int id, int idnv)
+        {
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    User us = db.Users.SingleOrDefault(x => x.Id == id);
+                    if (us == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        us.Idnhanvien = idnv;
+                        db.SaveChanges();
+                        return true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        [Route("change_status/{id}")]
+        public alter change_status(int id)
+        {
+            alter result = new alter();
+            try
+            {
+                using (sql_NCKHContext db = new sql_NCKHContext())
+                {
+                    User nguoidung = db.Users.SingleOrDefault(x => x.Id == id);
+                    if (nguoidung == null)
+                    {
+                        result.ketqua = false;
+                        result.thongbao = "Không tồn tại tài khoản này";
+                    }
+                    else
+                    {
+                        if (nguoidung.Trangthai == 1)
+                        {
+                            nguoidung.Trangthai = 2;
+                            result.thongbao = "Tầi khoản này đã bị vô hiệu hoá";
+                        }
+                        else
+                        {
+                            nguoidung.Trangthai = 1;
+                            result.thongbao = "Tầi khoản này hoạt động bình thường";
+                        }
+                        result.ketqua = true;
+                        db.SaveChanges();
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.ketqua = false;
+                result.thongbao = ex.Message;
+                return result;
             }
         }
     }

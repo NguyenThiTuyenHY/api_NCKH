@@ -22,10 +22,21 @@ namespace API.Controllers
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
                 ds = db.Tblsohuus.Skip(pageindex).Take(pagesize).ToList();
-                dv.total = db.Tbldonvis.Count();
+                dv.total = db.Tblsohuus.Count();
                 dv.result = ds;
             }
             return dv;
+        }
+        [Route("get_sohuu_all")]
+        [HttpGet]
+        public List<Tblsohuu> get_sohuu_all()
+        {
+            List<Tblsohuu> ds = new List<Tblsohuu>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                ds = db.Tblsohuus.ToList();
+            }
+            return ds;
         }
         [Route("get_sohuu_id/{id}")]
         [HttpGet]

@@ -513,7 +513,16 @@ namespace API.Models
                     .HasColumnName("ngay");
 
                 entity.Property(e => e.Noidung).HasColumnName("noidung");
-
+                entity.Property(e => e.Trangthai).HasColumnName("trangthai");
+                entity.Property(e => e.Hinhanh).HasColumnName("hinhanh");
+                entity.Property(e => e.Token_access).HasColumnName("token_access");
+                entity.Property(e => e.Id_social).HasColumnName("id_social");
+                entity.Property(e => e.Loai).HasColumnName("loai");
+                entity.Property(e => e.Fistname).HasColumnName("fistname");
+                entity.Property(e => e.Lastname).HasColumnName("lastname");
+                entity.Property(e => e.Number).HasColumnName("number");
+                entity.Property(e => e.Ngay_update).HasColumnName("ngay_update");
+                entity.Property(e => e.Last_user).HasColumnName("last_user");
                 entity.HasOne(d => d.IddetaiNavigation)
                     .WithMany(p => p.Tblphanhois)
                     .HasForeignKey(d => d.Iddetai)
@@ -556,7 +565,7 @@ namespace API.Models
                 entity.ToTable("tblsohuudetai");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
+                    //.ValueGeneratedNever()
                     .HasColumnName("id");
 
                 entity.Property(e => e.Ghichu).HasColumnName("ghichu");
@@ -581,7 +590,7 @@ namespace API.Models
                 entity.ToTable("tbltintuc");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
+                    //.ValueGeneratedNever()
                     .HasColumnName("id");
 
                 entity.Property(e => e.Hinhanh)
@@ -629,6 +638,7 @@ namespace API.Models
                 entity.Property(e => e.Token)
                     .IsUnicode(false)
                     .HasColumnName("token");
+                entity.Property(e => e.Trangthai).HasColumnName("trangthai");
 
                 entity.HasOne(d => d.IdnhanvienNavigation)
                     .WithMany(p => p.Users)
