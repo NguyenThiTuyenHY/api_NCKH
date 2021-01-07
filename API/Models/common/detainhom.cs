@@ -18,5 +18,6 @@ namespace API.Models
         public DateTime? Thoigiannt { get; set; }
         public DateTime? Thoigiangiahan { get; set; } // Thời gian gia hạn
         public int? Tinhtrang { get; set; } // 1 - chua duyet, 2 - duyet, 3 - hoan thanh, 4 - xin thoi gian, 5 - ap dung thuc tien   
+       tại sao mà cần phải dùng sql chung?
     }
 }
