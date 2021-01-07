@@ -51,13 +51,14 @@ namespace API.Controllers
             {
                 List<thongke_admin_luotxem_loaitt> result = new List<thongke_admin_luotxem_loaitt>();
                 List<Tbldetai> dt = db.Tbldetais.Where(x => x.Tinhtrang < 5 && x.Tinhtrang > 0).ToList();
+                DateTime date = DateTime.Now;
                 for (int i = 1; i <= 12; i++)
-                    {
-                        thongke_admin_luotxem_loaitt a = new thongke_admin_luotxem_loaitt();
-                        a.id = i;
-                        a.loaitt = "Tháng " + i;
-                        DateTime.TryParse
-                        a.soluong = dt.Where()
+                {
+                    thongke_admin_luotxem_loaitt a = new thongke_admin_luotxem_loaitt();
+                    a.id = i;
+                    a.loaitt = "Tháng " + i;
+                    a.soluong = dt.Where(x => x.Thoigianbd.Year == date.Year && x.Thoigianbd.Month == i).Count();
+                    result.Add(a);
                 }
                 return result;
             }

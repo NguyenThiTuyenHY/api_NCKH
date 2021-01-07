@@ -33,8 +33,8 @@ namespace API.Models
         public int? Idloainv { get; set; }
         public int? Idhdnckh { get; set; }
         public int? Uytin { get; set; }
-        public DateTime? Thoigianbd { get; set; }
-        public DateTime? Thoigiankt { get; set; }
+        public DateTime Thoigianbd { get; set; }
+        public DateTime Thoigiankt { get; set; }
         public DateTime? Thoigiannt { get; set; }
         public DateTime? Thoigiangiahan { get; set; }
         public int? Kqbv { get; set; } // 1 - Xuất sắc, 2 - Giỏi, 3 - Khá, 4 - Trung bình, 5 - Kém
