@@ -27,6 +27,18 @@ namespace API.Controllers
                     Chucvu = ntg.Chucvu,
                     Hoten = nv.Hoten
                 }).Where(x=>x.Iddetai==id).ToList();
+                foreach(Tblnhomtg tg in db.Tblnhomtgs)
+                {
+                    if(tg.Iddetai == id && tg.Idnv == null)
+                    {
+                        nhomtg a = new nhomtg();
+                        a.Id = tg.Id;
+                        a.Iddetai = tg.Iddetai;
+                        a.Chucvu = tg.Chucvu;
+                        a.Hoten = tg.Hoten;
+                        ds.Add(a);
+                    }
+                }
             }
             return ds;
         }

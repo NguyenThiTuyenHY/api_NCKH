@@ -337,5 +337,16 @@ namespace API.Controllers
                 return result;
             }
         }
+        public user_key get_report_user()
+        {
+            using(sql_NCKHContext db = new sql_NCKHContext())
+            {
+                user_key a = new user_key();
+                a.tonguser = db.Users.Count();
+                a.dsuser = db.Users.Where(x => x.Trangthai == 2).ToList();
+                a.tongkey = a.dsuser.Count();
+                return a;
+            }
+        }
     }
 }
