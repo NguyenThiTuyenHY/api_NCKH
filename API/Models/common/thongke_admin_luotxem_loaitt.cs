@@ -9,6 +9,6 @@ namespace API.Models
     {
         public int id { get; set; }
         public string loaitt { get; set; }
-        public int soluong { get; set; }
+        public int? soluong { get; set; }
     }
 }

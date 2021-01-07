@@ -33,12 +33,22 @@ namespace API.Controllers
                     {
                         nhomtg a = new nhomtg();
                         a.Id = tg.Id;
+                        a.Idnv = -1;
                         a.Iddetai = tg.Iddetai;
                         a.Chucvu = tg.Chucvu;
                         a.Hoten = tg.Hoten;
                         ds.Add(a);
                     }
                 }
+                Tbldetai dt = db.Tbldetais.SingleOrDefault(x => x.Id == id);
+                Tblnhanvien dsnv = db.Tblnhanviens.SingleOrDefault(x => x.Id == dt.Idnv);
+                nhomtg b = new nhomtg();
+                b.Id = 0;
+                b.Iddetai = id;
+                b.Idnv = dsnv.Id;
+                b.Chucvu = "Chủ đề tài";
+                b.Hoten = dsnv.Hoten;
+                ds.Add(b);
             }
             return ds;
         }
@@ -50,6 +60,10 @@ namespace API.Controllers
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
                 dv = db.Tblnhomtgs.SingleOrDefault(x => x.Id == id);
+                if(dv.Idnv == null)
+                {
+                    dv.Idnv = -1;
+                }
             }
             return dv;
         }
@@ -115,7 +129,7 @@ namespace API.Controllers
                         if (nhomtg == null)
                         {
                             d.Idnv = ntg.Idnv;
-                            d.Hoten = ntg.Hoten;
+                            d.Hoten = db.Tblnhanviens.SingleOrDefault(x=>x.Id == ntg.Idnv).Hoten;
                             d.Chucvu = ntg.Chucvu;
                             db.SaveChanges();
                             result.ketqua = true;

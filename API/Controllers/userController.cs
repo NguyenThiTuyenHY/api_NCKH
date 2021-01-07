@@ -299,6 +299,7 @@ namespace API.Controllers
             }
         }
         [Route("change_status/{id}")]
+        [HttpGet]
         public alter change_status(int id)
         {
             alter result = new alter();
@@ -337,6 +338,8 @@ namespace API.Controllers
                 return result;
             }
         }
+        [Route("get_report_user")]
+        [HttpGet]
         public user_key get_report_user()
         {
             using(sql_NCKHContext db = new sql_NCKHContext())

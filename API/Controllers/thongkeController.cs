@@ -14,19 +14,15 @@ namespace API.Controllers
     {
         [Route("thongke_admin")]
         [HttpGet]
-        public List<double> thongke_admin()
+        public total thongke_admin()
         {
-            List<double> result = new List<double>();
+            total result = new total();
             using (sql_NCKHContext db = new sql_NCKHContext())
             {
-                double a = db.Tblnhanviens.Count();
-                double b = db.Tbldetais.Count();
-                double c = db.Tbldetais.Where(x=>x.Tinhtrang == 3).Count() / db.Tbldetais.Count();
-                double d = db.Tblphanhois.Count();
-                db.Add(a);
-                db.Add(b);
-                db.Add(c);
-                db.Add(d);
+                result.total_canbo = db.Tblnhanviens.Count();
+                result.total_detai = db.Tbldetais.Count();
+                result.phantram_detai = db.Tbldetais.Where(x=>x.Tinhtrang == 3).Count() / db.Tbldetais.Count();
+                result.total_phanhoi = db.Tblphanhois.Count();
             }
             return result;
         }
@@ -44,7 +40,8 @@ namespace API.Controllers
                     thongke_admin_luotxem_loaitt a = new thongke_admin_luotxem_loaitt();
                     a.id = ltt.Id;
                     a.loaitt = ltt.Tenloaitt;
-                    a.soluong = dstt.Where(x => x.Idloai == ltt.Id).Count();
+                    a.soluong = dstt.Where(x => x.Idloai == ltt.Id).Sum(x=>x.Luotem);
+                    result.Add(a);
                 }
             }
             return result;
@@ -73,10 +70,19 @@ namespace API.Controllers
         [HttpGet]
         public List<Tbldetai> thongke_detai_giahan(int pageindex, int pagesize)
         {
+            List<Tbldetai> dt = new List<Tbldetai>();
             using(sql_NCKHContext db = new sql_NCKHContext())
             {
                 int index = (pageindex - 1) * pagesize;
-                return db.Tbldetais.Where(x => x.Tinhtrang == 4).Skip(index).Take(pagesize).ToList();
+                dt = db.Tbldetais.Where(x => x.Tinhtrang == 4).ToList();
+                if (dt.Count()==0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return db.Tbldetais.Where(x => x.Tinhtrang == 4).Skip(index).Take(pagesize).ToList();
+                }
             }
         } 
     }

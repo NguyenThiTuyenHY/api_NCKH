@@ -109,6 +109,136 @@ namespace API.Controllers
             }
             return dv;
         }
+        [Route("get_detai_pagesize_tìnhtrang")]
+        [HttpGet]
+        public datatable<detai> get_detai_pagesize_tinhtrang(int pagesize, int pageindex, string search, int tinhtrang)
+        {
+            datatable<detai> dv = new datatable<detai>();
+            List<detai> ds = new List<detai>();
+            using (sql_NCKHContext db = new sql_NCKHContext())
+            {
+                //int index = (pageindex - 1) * pagesize;
+                if (!string.IsNullOrEmpty(search))
+                {
+                    ds = (from dt in db.Tbldetais
+                          join hd in db.Tblhoatdongnckhs on dt.Idhdnckh equals hd.Id
+                          join lv in db.Tbllinhvucs on dt.Idlinhvuc equals lv.Id
+                          join lnv in db.Tblloainhiemvus on dt.Idloainv equals lnv.Id
+                          join nv in db.Tblloaihoatdongs on hd.Idloaihd equals nv.Id
+                          select new detai
+                          {
+                              Id = dt.Id,
+                              Tendetai = dt.Tendetai,
+                              Idnv = dt.Idnv,
+                              Idlsp = dt.Idlsp,
+                              Tentc = dt.Tentc,
+                              Sohieu = dt.Sohieu,
+                              Namsx = dt.Namsx,
+                              Tap = dt.Tap,
+                              So = dt.So,
+                              Trang = dt.Trang,
+                              Soif = dt.Soif,
+                              Minhchung = dt.Minhchung,
+                              Tinhtrang = dt.Tinhtrang,
+                              Ghichu = dt.Ghichu,
+                              Idlinhvuc = dt.Idlinhvuc,
+                              Idloainv = dt.Idloainv,
+                              Idhdnckh = dt.Idhdnckh,
+                              Uytin = dt.Uytin,
+                              Thoigianbd = dt.Thoigianbd,
+                              Thoigiankt = dt.Thoigiankt,
+                              Thoigiannt = dt.Thoigiannt,
+                              Thoigiangiahan = dt.Thoigiangiahan,
+                              Kqbv = dt.Kqbv,
+                              Capbv = dt.Capbv,
+                              Noidang = dt.Noidang,
+                              Namdang = dt.Namdang,
+                              Tenhdnckh = nv.Tenloaihd,
+                              Tenlinhvuc = lv.Tenlinhvuc,
+                              Tenloainv = lnv.Tenloainv
+                          }).Where(x => x.Tendetai.IndexOf(search) >= 0).Skip(pageindex).Take(pagesize).ToList();
+                    dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0).Count();
+                    switch (tinhtrang)
+                    {
+                        case 1:
+                            dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 && x.Tinhtrang == 3).Count();
+                            break;
+                        case 2:
+                            dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 && x.Tinhtrang == 2).Count();
+                            break;
+                        case 3:
+                            dv.total = db.Tbldetais.Where(x => x.Tendetai.IndexOf(search) >= 0 && x.Tinhtrang == -1).Count();
+                            break;
+                    }
+                }
+                else
+                {
+                    ds = (from dt in db.Tbldetais
+                          join hd in db.Tblhoatdongnckhs on dt.Idhdnckh equals hd.Id
+                          join lv in db.Tbllinhvucs on dt.Idlinhvuc equals lv.Id
+                          join lnv in db.Tblloainhiemvus on dt.Idloainv equals lnv.Id
+                          join nv in db.Tblloaihoatdongs on hd.Idloaihd equals nv.Id
+                          select new detai
+                          {
+                              Id = dt.Id,
+                              Tendetai = dt.Tendetai,
+                              Idnv = dt.Idnv,
+                              Idlsp = dt.Idlsp,
+                              Tentc = dt.Tentc,
+                              Sohieu = dt.Sohieu,
+                              Namsx = dt.Namsx,
+                              Tap = dt.Tap,
+                              So = dt.So,
+                              Trang = dt.Trang,
+                              Soif = dt.Soif,
+                              Minhchung = dt.Minhchung,
+                              Tinhtrang = dt.Tinhtrang,
+                              Ghichu = dt.Ghichu,
+                              Idlinhvuc = dt.Idlinhvuc,
+                              Idloainv = dt.Idloainv,
+                              Idhdnckh = dt.Idhdnckh,
+                              Uytin = dt.Uytin,
+                              Thoigianbd = dt.Thoigianbd,
+                              Thoigiankt = dt.Thoigiankt,
+                              Thoigiannt = dt.Thoigiannt,
+                              Thoigiangiahan = dt.Thoigiangiahan,
+                              Kqbv = dt.Kqbv,
+                              Capbv = dt.Capbv,
+                              Noidang = dt.Noidang,
+                              Namdang = dt.Namdang,
+                              Tenhdnckh = nv.Tenloaihd,
+                              Tenlinhvuc = lv.Tenlinhvuc,
+                              Tenloainv = lnv.Tenloainv
+                          }).Skip(pageindex).Take(pagesize).ToList();
+                    switch (tinhtrang)
+                    {
+                        case 1:
+                            dv.total = db.Tbldetais.Where(x => x.Tinhtrang == 3).Count();
+                            break;
+                        case 2:
+                            dv.total = db.Tbldetais.Where(x => x.Tinhtrang == 2).Count();
+                            break;
+                        case 3:
+                            dv.total = db.Tbldetais.Where(x => x.Tinhtrang == -1).Count();
+                            break;
+                    } 
+                }
+                switch (tinhtrang)
+                {
+                    case 1:
+                        ds = ds.Where(x => x.Tinhtrang == 3).ToList();
+                        break;
+                    case 2:
+                        ds = ds.Where(x => x.Tinhtrang == 2).ToList();
+                        break;
+                    case 3:
+                        ds = ds.Where(x => x.Tinhtrang == -1).ToList();
+                        break;
+                }
+                dv.result = ds;
+            }
+            return dv;
+        }
         public DateTime tinhthoigiannt(Tbldetai dt, DateTime tg)
         {
             double? c = 0;
