@@ -12,6 +12,8 @@ namespace API.Controllers
     [ApiController]
     public class thongkeController : ControllerBase
     {
+        [Route("thongke_admin")]
+        [HttpGet]
         public List<double> thongke_admin()
         {
             List<double> result = new List<double>();
@@ -28,6 +30,8 @@ namespace API.Controllers
             }
             return result;
         }
+        [Route("thongke_admin_luotxem_loaitt")]
+        [HttpGet]
         public List<thongke_admin_luotxem_loaitt> thongke_admin_luotxem_loaitt()
         {
             List<thongke_admin_luotxem_loaitt> result = new List<thongke_admin_luotxem_loaitt>();
@@ -44,7 +48,9 @@ namespace API.Controllers
                 }
             }
             return result;
-        } 
+        }
+        [Route("thongke_detai_trongnam_hh")]
+        [HttpGet]
         public List<thongke_admin_luotxem_loaitt> thongke_detai_trongnam_hh()
         {
             using(sql_NCKHContext db = new sql_NCKHContext())
@@ -63,6 +69,8 @@ namespace API.Controllers
                 return result;
             }
         }
+        [Route("thongke_detai_giahan")]
+        [HttpGet]
         public List<Tbldetai> thongke_detai_giahan(int pageindex, int pagesize)
         {
             using(sql_NCKHContext db = new sql_NCKHContext())
